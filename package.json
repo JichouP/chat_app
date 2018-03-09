@@ -4,8 +4,9 @@
   "description": "socket.io test",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "parcel watch index.html"
+    "test": "jest",
+    "start": "parcel watch index.html",
+    "node": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.40",
     "@babel/core": "^7.0.0-beta.40",
+    "jest": "^22.4.2",
     "parcel-bundler": "^1.6.2"
   },
   "dependencies": {
