@@ -9,12 +9,12 @@ const serverConfig = {
   },
   module: {
     rules: [{
-      test: /src\/.*\.js$/,
+      test: /\.js$/,
       loader: 'babel-loader',
       options: {
         presets: [["env", {
           "targets": {
-            "node": "6.10",
+            "node": "9.3.0",
           }
         }]]
       }
@@ -32,7 +32,7 @@ const clientConfig = {
   },
   module: {
     rules: [{
-      test:  /src\/.*\.(js|jsx)$/,
+      test: /\.(js|jsx)$/,
       loader: 'babel-loader',
     }]
   },

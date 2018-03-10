@@ -5,8 +5,8 @@
   "main": "app.jsx",
   "scripts": {
     "test": "jest",
-    "build": "webpack",
-    "start": "webpack -w",
+    "build": "webpack --mode development",
+    "start": "webpack -w --mode development",
     "node": "nodemon public/server.js"
   },
   "repository": {
