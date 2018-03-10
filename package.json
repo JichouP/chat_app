@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "parcel watch index.html --public-url \"./\"",
-    "node": "nodemon server.js"
+    "build": "webpack",
+    "start": "webpack -w",
+    "node": "nodemon public/server.js"
   },
   "repository": {
     "type": "git",
@@ -22,10 +23,13 @@
     "babel-preset-env": "^1.6.1",
     "jest": "^22.4.2",
     "nodemon": "^1.17.1",
-    "parcel-bundler": "^1.6.2"
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.11",
+    "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
     "express": "^4.16.2",
+    "mongodb": "^3.0.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "socket.io": "^2.0.4",
