@@ -10,9 +10,13 @@ const serverConfig = {
   module: {
     rules: [{
       test: /src\/.*\.js$/,
-      loader: 'eslint-loader',
+      loader: 'babel-loader',
       options: {
-        failOnError: true
+        presets: [["env", {
+          "targets": {
+            "node": "6.10",
+          }
+        }]]
       }
     }]
   },
@@ -30,9 +34,6 @@ const clientConfig = {
     rules: [{
       test:  /src\/.*\.(js|jsx)$/,
       loader: 'babel-loader',
-      options: {
-        failOnError: false
-      }
     }]
   },
   resolve: {
