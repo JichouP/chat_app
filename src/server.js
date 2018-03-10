@@ -12,7 +12,4 @@ server.listen(3000, () => {
 
 io.on('connection', (socket) => {
   console.log('success!!!');
-  socket.on('mes', (mes) => {
-    console.log(mes);
-  })
 });

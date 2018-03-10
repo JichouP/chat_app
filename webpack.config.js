@@ -2,7 +2,7 @@ const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
 const serverConfig = {
-  entry: './src/server.js',
+  entry: path.resolve('src') + '/server.js',
   output: {
     path: path.resolve('public'),
     filename: 'server.js'
@@ -21,19 +21,22 @@ const serverConfig = {
 };
 
 const clientConfig = {
-  entry: './src/app.jsx',
+  entry: path.resolve('src') + '/app.jsx',
   output: {
     path: path.resolve('public'),
     filename: 'bundle.js'
   },
   module: {
     rules: [{
-      test: /src\/.*\.js$/,
-      loader: 'eslint-loader',
+      test:  /src\/.*\.(js|jsx)$/,
+      loader: 'babel-loader',
       options: {
         failOnError: false
       }
     }]
+  },
+  resolve: {
+    extensions: ['.jsx', '.js'],
   },
   devtool: 'source-map',
   target: 'web'
