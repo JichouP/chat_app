@@ -37,6 +37,7 @@
     "mongodb": "^3.0.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "sha.js": "^2.4.10",
     "socket.io": "^2.0.4",
     "socket.io-client": "^2.0.4"
   }
