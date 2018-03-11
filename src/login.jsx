@@ -15,8 +15,13 @@ export default function Login(props) {
         const ID = document.getElementById('ID').value;
         const PassWord = document.getElementById('PassWord').value;
         const RePassWord = document.getElementById('RePassWord').value;
-        if(PassWord===RePassWord && ID===/.+/) {
-          socket.emit('Register', ID, PassWord)}}}>
+        if(PassWord===RePassWord && ID===/\w{5,}/ && PassWord===/\w{5,}/) {
+          socket.emit('Register', ID, PassWord);
+        }else if (PassWord!==RePassWord) {
+          alert('パスワードが一致していません');
+        }else {
+          alert('IDとパスワードは少なくとも5文字以上の英数字で入力してください');
+        }}}>
         登録
       </button>
     </div>
