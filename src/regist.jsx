@@ -23,7 +23,11 @@ export default function Regist(props) {
           socket.emit('RegistReq', ID, PassWord);
         }else {
           alert('IDとパスワードは少なくとも5文字以上の英数字で入力してください');
-        }}}>
+        }
+        socket.on('RegistSuc', () => {
+          
+        })
+      }}>
         登録
       </button></div>
       <div><button onClick={() => {props.onChangeScene( SCENE_TITLE )}}>戻る</button></div>
