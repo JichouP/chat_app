@@ -25,7 +25,7 @@ const serverConfig = {
 };
 
 const clientConfig = {
-  entry: path.resolve('src') + '/app.jsx',
+  entry: path.resolve('src') + '/index.jsx',
   output: {
     path: path.resolve('public'),
     filename: 'bundle.js'
