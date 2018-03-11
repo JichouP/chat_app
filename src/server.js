@@ -43,11 +43,29 @@ io.on('connection', (socket) => {
   //Regist
   socket.on('RegistReq', (ID, Pass) => {
     console.log(`[Regist] ID:${ID}, PassWord:${Pass}, Hash:${shajs('sha256').update(Pass).digest('hex')}`);
-    MongoClient.connect('mongodb://localhost:27017', (err, client) => {
-    assert.equal(err, null);
-    console.log("Connect to MongoDB!");
-    client.db(dbName).collection('userData').insert({'ID': ID, 'Pass': shajs('sha256').update(Pass).digest('hex')});
-    client.close();
+    const promise = new Promise((resolve, reject) => {
+      MongoClient.connect('mongodb://localhost:27017', (err, client) => {
+        assert.equal(err, null);
+        console.log("Connect to MongoDB!");
+        client.db(dbName).collection('userData').find({'ID': ID, 'Pass': shajs('sha256').update(Pass).digest('hex')}).toArray((err, docs) => {
+          if (docs[0] !== undefined) {
+            console.log('There are already same ID');
+          }else {
+            resolve();
+          }
+        client.close();
+        })
+      });
+    })
+    promise.then(() => {
+      MongoClient.connect('mongodb://localhost:27017', (err, client) => {
+        assert.equal(err, null);
+        console.log("Connect to MongoDB!");
+        client.db(dbName).collection('userData').insert({'ID': ID, 'Pass': shajs('sha256').update(Pass).digest('hex')});
+        client.close();
+      })
+    }).catch(() => {
+      console.log('There are error');
     });
   })
 });
