@@ -23,15 +23,31 @@ server.listen(3000, () => {
 
 io.on('connection', (socket) => {
   console.log('Connection Success!!!');
-  socket.on('Login', (ID, Pass) => {
+  //Login
+  socket.on('LoginReq', (ID, Pass) => {
     console.log(`[Login] ID:${ID}, PassWord:${Pass}`);
+    MongoClient.connect('mongodb://localhost:27017', (err, client) => {
+      assert.equal(err, null);
+      console.log("Connect to MongoDB!");
+      client.db(dbName).collection('userData').find({'ID': ID, 'Pass': shajs('sha256').update(Pass).digest('hex')}).toArray((err, docs) => {
+        if (docs[0] === undefined) {
+          console.log('Not Found!');
+        }else{
+          console.log(`Found UserData! ID:${docs[0].ID}, Pass:${docs[0].Pass}`);
+        }
+      })
+      client.close();
+    });
+    
   });
-  socket.on('Regist', (ID, Pass) => {
+  //Regist
+  socket.on('RegistReq', (ID, Pass) => {
     console.log(`[Regist] ID:${ID}, PassWord:${Pass}, Hash:${shajs('sha256').update(Pass).digest('hex')}`);
     MongoClient.connect('mongodb://localhost:27017', (err, client) => {
     assert.equal(err, null);
     console.log("Connect to MongoDB!");
-    const db = client.db(dbName).collection('userData').insert({'ID': ID, 'Pass': shajs('sha256').update(Pass).digest('hex')});
+    client.db(dbName).collection('userData').insert({'ID': ID, 'Pass': shajs('sha256').update(Pass).digest('hex')});
+    client.close();
     });
   })
 });

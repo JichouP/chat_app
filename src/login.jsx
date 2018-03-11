@@ -14,9 +14,8 @@ export default function Login(props) {
         const ID = document.getElementById('ID').value;
         const PassWord = document.getElementById('PassWord').value;
         const RegExpPattern = /\w{5,}/;
-        console.log(ID.match(RegExpPattern), PassWord.match(RegExpPattern));
         if(ID.match(RegExpPattern) && PassWord.match(RegExpPattern)) {
-          socket.emit('Login', ID, PassWord);
+          socket.emit('LoginReq', ID, PassWord);
         }else {
           alert('IDとパスワードは少なくとも5文字以上の英数字で入力してください');
         }}}>

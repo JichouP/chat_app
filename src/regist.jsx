@@ -20,7 +20,7 @@ export default function Regist(props) {
         if(PassWord!==RePassWord) {
           alert('パスワードが一致していません')
         }else if (ID.match(RegExpPattern) && PassWord.match(RegExpPattern)) {
-          socket.emit('Regist', ID, PassWord);
+          socket.emit('RegistReq', ID, PassWord);
         }else {
           alert('IDとパスワードは少なくとも5文字以上の英数字で入力してください');
         }}}>
