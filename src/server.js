@@ -4,6 +4,7 @@ const socketio = require('socket.io');
 const io = socketio(server);
 const path = require('path');
 const morgan = require('morgan');
+express.use(morgan('combined'));
 express.get('*', (req, res) => {
   res.sendFile(`${path.resolve('public')}${req.path}`);
 });
