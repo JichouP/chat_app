@@ -14,4 +14,10 @@ server.listen(3000, () => {
 
 io.on('connection', (socket) => {
   console.log('success!!!');
+  socket.on('Login', (ID, Pass) => {
+    console.log(`[Login] ID:${ID}, PassWord:${Pass}`);
+  });
+  socket.on('Regist', (ID, Pass) => {
+    console.log(`[Regist] ID:${ID}, PassWord:${Pass}`);
+  })
 });
