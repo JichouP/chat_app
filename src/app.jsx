@@ -3,7 +3,9 @@ import React from 'react';
 import Title from './title';
 import Login from './login';
 import Regist from './regist';
-import { SCENE_TITLE, SCENE_LOGIN, SCENE_REGIST } from './scenes';
+import Lobby from './lobby';
+import Room from './room';
+import { SCENE_TITLE, SCENE_LOGIN, SCENE_REGIST, SCENE_LOBBY, SCENE_ROOM } from './scenes';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -22,6 +24,10 @@ export default class App extends React.Component {
       return <Login onChangeScene={this.onChangeScene} {...this.state}/>
     }else if (scene === SCENE_REGIST) {
       return <Regist onChangeScene={this.onChangeScene} {...this.state}/>
+    }else if (scene === SCENE_LOBBY) {
+      return <Lobby onChangeScene={this.onChangeScene} {...this.state}/>
+    }else if (scene === SCENE_ROOM) {
+      return <Room onChangeScene={this.onChangeScene} {...this.state}/>
     }
   }
 }
