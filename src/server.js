@@ -16,6 +16,7 @@ express.use(morgan('combined'));
 //mongodb
 const dbName = 'chatApp';
 
+//rooting
 express.get('*', (req, res) => {
   res.sendFile(`${path.resolve('public')}${req.path}`);
 });
@@ -23,6 +24,7 @@ server.listen(3000, () => {
   console.log('listening to port3000');
 });
 
+//storage of socketid
 let socketid = {};
 
 io.on('connection', (socket) => {
@@ -54,7 +56,7 @@ io.on('connection', (socket) => {
       MongoClient.connect('mongodb://localhost:27017', (err, client) => {
         assert.equal(err, null);
         console.log("Connect to MongoDB!");
-        client.db(dbName).collection('userData').find({'ID': ID, 'Pass': shajs('sha256').update(Pass).digest('hex')}).toArray((err, docs) => {
+        client.db(dbName).collection('userData').find({'ID': ID}).toArray((err, docs) => {
           if (docs[0] !== undefined) {
             console.log('There are already same ID');
           }else {
