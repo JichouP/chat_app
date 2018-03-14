@@ -4,6 +4,9 @@ import { SCENE_TITLE } from './scenes'
 
 export default function Regist(props) {
   const socket = io();
+  socket.on('RegistFailed', () => {
+    alert('This ID is already registed');
+  });
   return (
     <div>
       <div><label htmlFor="ID">ID:</label>

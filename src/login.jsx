@@ -4,11 +4,8 @@ import { SCENE_TITLE, SCENE_LOBBY } from './scenes';
 
 export default function Login(props) {
   const socket = io();
-  socket.on('LoginRes', (mes) => {
-    console.log(mes);
-    if (mes === 'success') {
-      return props.onChangeScene( SCENE_LOBBY );
-    }
+  socket.on('LoginSuccess', () => {
+    return props.onChangeScene( SCENE_LOBBY );
   });
   return (
     <div>
