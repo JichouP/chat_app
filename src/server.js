@@ -3,7 +3,9 @@ import { CLIENT_RENEG_LIMIT } from 'tls';
 const express = require('express')();
 const server = require('http').createServer(express);
 const socketio = require('socket.io');
-const io = socketio(server);
+const io = socketio(server, {
+  pingInterval: 1000,
+});
 const path = require('path');
 const morgan = require('morgan');
 const MongoClient = require('mongodb').MongoClient;
@@ -41,7 +43,7 @@ io.on('connection', (socket) => {
         }else{
           console.log(`Found UserData! ID:${docs[0].ID}, Pass:${docs[0].Pass}`);
           socketid[socket.id] = ID;
-          io.to(socket.id).emit('LoginRes', 'success');
+          io.to(socket.id).emit('LoginSuccess');
           console.log(socketid);
         }
       })
@@ -59,6 +61,7 @@ io.on('connection', (socket) => {
         client.db(dbName).collection('userData').find({'ID': ID}).toArray((err, docs) => {
           if (docs[0] !== undefined) {
             console.log('There are already same ID');
+            io.to(socket.id).emit('RegistFailed')
           }else {
             resolve();
           }
@@ -80,6 +83,6 @@ io.on('connection', (socket) => {
   //Request Room in Lobby
   let rooms = ["room1", "room2", "room3"];
   socket.on('RoomReq', () => {
-    socket.emit('RoomRes', rooms);
+    io.to(socket.id).emit('RoomRes', rooms);
   });
 });
