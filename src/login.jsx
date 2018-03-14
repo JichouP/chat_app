@@ -1,9 +1,15 @@
 import React from 'react';
 import io from 'socket.io-client';
-import { SCENE_TITLE } from './scenes';
+import { SCENE_TITLE, SCENE_LOBBY } from './scenes';
 
 export default function Login(props) {
   const socket = io();
+  socket.on('LoginRes', (mes) => {
+    console.log(mes);
+    if (mes === 'success') {
+      return props.onChangeScene( SCENE_LOBBY );
+    }
+  });
   return (
     <div>
       <div><label htmlFor="ID">ID:</label>

@@ -1,3 +1,5 @@
+import { CLIENT_RENEG_LIMIT } from 'tls';
+
 const express = require('express')();
 const server = require('http').createServer(express);
 const socketio = require('socket.io');
@@ -21,6 +23,8 @@ server.listen(3000, () => {
   console.log('listening to port3000');
 });
 
+let socketid = {};
+
 io.on('connection', (socket) => {
   console.log('Connection Success!!!');
   //Login
@@ -34,6 +38,9 @@ io.on('connection', (socket) => {
           console.log('Not Found!');
         }else{
           console.log(`Found UserData! ID:${docs[0].ID}, Pass:${docs[0].Pass}`);
+          socketid[socket.id] = ID;
+          io.to(socket.id).emit('LoginRes', 'success');
+          console.log(socketid);
         }
       })
       client.close();
@@ -68,4 +75,9 @@ io.on('connection', (socket) => {
       console.log('There are error');
     });
   })
+  //Request Room in Lobby
+  let rooms = ["room1", "room2", "room3"];
+  socket.on('RoomReq', () => {
+    socket.emit('RoomRes', rooms);
+  });
 });
