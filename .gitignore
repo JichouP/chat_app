@@ -1,4 +1,6 @@
 /.cache
 /.vscode
 /node_modules/
-/public/
+/public/bundle.js
+/public/bundle.js.map
+/public/server.js
