@@ -8,20 +8,23 @@ export default class Lobby extends React.Component {
     this.room = [];
     this.state = { data: this.room }
     this.socket = io();
-  }
-
-  onRoomReq() {
-    this.socket.emit('RoomReq')
+    this.socket.on('hello', (mes) => {
+      console.log(mes);
+    });
+    this.socket.emit('RoomReq');
     this.socket.on('RoomRes', (rooms) => {
       for(let value of rooms) {
-        this.room.push(<div key={value}><label className="label label-default" htmlFor={value}>{value}</label><button id={value}>Join</button></div>)
+        this.room.push(<div key={value}>
+                        <label className="label label-default" htmlFor={value}>{value}</label>
+                        <button id={value} onClick={() => {this.onClick(value)}}>Join</button>
+                      </div>)
         this.setState({ data: this.room });
       }
     })
   }
 
-  componentDidMount() {
-    this.onRoomReq();
+  onClick(value) {
+    this.socket.emit('EnterReq', value);
   }
 
   render() {

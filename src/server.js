@@ -85,4 +85,10 @@ io.on('connection', (socket) => {
   socket.on('RoomReq', () => {
     io.to(socket.id).emit('RoomRes', rooms);
   });
+  //Enter Room Request
+  socket.on('EnterReq', (value) => {
+    console.log(value);
+    socket.join(value);
+    io.to(value).emit('hello', value);
+  })
 });
