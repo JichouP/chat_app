@@ -10,11 +10,11 @@ export default function Login(props) {
   return (
     <div>
       <form>
-        <div className="input-group col-xs-4">
+        <div className="input-group col-xs-4 form">
           <span className="input-group-addon"><i className="glyphicon glyphicon-user"></i></span>
           <input type="text" name="ID" id="ID" className="form-control" placeholder="ID" autoFocus={true}/>
         </div>
-        <div className="input-group col-xs-4" >
+        <div className="input-group col-xs-4 form" >
           <span className="input-group-addon"><i className="glyphicon glyphicon-lock"></i></span>
           <input type="password" name="PassWord" id="PassWord" className="form-control" placeholder="Password" />
         </div>
@@ -31,8 +31,6 @@ export default function Login(props) {
           }}}>
           ログイン
         </button>
-      </div>
-      <div>
         <button className="btn" onClick={() => {props.onChangeScene( SCENE_TITLE )}}>戻る</button>
       </div>
     </div>
