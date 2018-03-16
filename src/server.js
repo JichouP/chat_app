@@ -89,6 +89,6 @@ io.on('connection', (socket) => {
   socket.on('EnterReq', (value) => {
     console.log(value);
     socket.join(value);
-    io.to(value).emit('hello', value);
+    io.to(value).emit('EnterRes', value);
   })
 });

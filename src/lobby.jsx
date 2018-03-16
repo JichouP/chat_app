@@ -5,20 +5,21 @@ import { SCENE_ROOM, SCENE_TITLE } from './scenes';
 export default class Lobby extends React.Component {
   constructor(props) {
     super(props);
-    this.room = [];
-    this.state = { data: this.room }
+    this.lobby = [];
+    this.state = { lobby: this.lobby }
     this.socket = io();
-    this.socket.on('hello', (mes) => {
-      console.log(mes);
+    this.socket.on('EnterRes', (value) => {
+      this.setState({ room: value });
+      this.props.onChangeScene( SCENE_ROOM );
     });
     this.socket.emit('RoomReq');
     this.socket.on('RoomRes', (rooms) => {
       for(let value of rooms) {
-        this.room.push(<div key={value}>
+        this.lobby.push(<div key={value}>
                         <label className="label label-default" htmlFor={value}>{value}</label>
                         <button id={value} onClick={() => {this.onClick(value)}}>Join</button>
                       </div>)
-        this.setState({ data: this.room });
+        this.setState({ lobby: this.lobby });
       }
     })
   }
@@ -28,6 +29,6 @@ export default class Lobby extends React.Component {
   }
 
   render() {
-    return <div>{this.room}</div>
+    return <div>{this.lobby}</div>
   }
 }
