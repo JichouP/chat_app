@@ -17,7 +17,13 @@ express.use(morgan('combined'));
 
 //mongodb
 const dbName = 'chatApp';
-
+const collectionNameUser = 'userData';
+const insertUserData = (ID, Pass) => {
+  MongoClient.connect('mongodb://localhost:27017', (err, client) => {
+    client.db(dbName).collection(collectionNameUser).insert({'ID': ID, 'Pass': shajs('sha256').update(Pass).digest('hex')});
+    client.close();
+  })
+}
 //rooting
 express.get('*', (req, res) => {
   res.sendFile(`${path.resolve('public')}${req.path}`);
@@ -69,14 +75,9 @@ io.on('connection', (socket) => {
         })
       });
     })
-    promise.then(() => {
-      MongoClient.connect('mongodb://localhost:27017', (err, client) => {
-        assert.equal(err, null);
-        console.log("Connect to MongoDB!");
-        client.db(dbName).collection('userData').insert({'ID': ID, 'Pass': shajs('sha256').update(Pass).digest('hex')});
-        client.close();
-      })
-    }).catch(() => {
+    promise.then(
+      insertUserData(ID, Pass)
+    ).catch(() => {
       console.log('There are error');
     });
   })
