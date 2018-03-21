@@ -46,12 +46,12 @@ io.on('connection', (socket) => {
       client.db(dbName).collection('userData').find({'ID': ID, 'Pass': shajs('sha256').update(Pass).digest('hex')}).toArray((err, docs) => {
         if (docs[0] === undefined) {
           console.log('Not Found!');
-        }else{
-          console.log(`Found UserData! ID:${docs[0].ID}, Pass:${docs[0].Pass}`);
-          socketid[socket.id] = ID;
-          io.to(socket.id).emit('LoginSuccess');
-          console.log(socketid);
+          return 0;
         }
+        console.log(`Found UserData! ID:${docs[0].ID}, Pass:${docs[0].Pass}`);
+        socketid[socket.id] = ID;
+        io.to(socket.id).emit('LoginSuccess');
+        console.log(socketid);
       })
       client.close();
     });
