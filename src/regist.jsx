@@ -9,7 +9,23 @@ export default function Regist(props) {
   });
   return (
     <div>
-      <form>
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        const ID = document.getElementById('ID').value;
+        const PassWord = document.getElementById('PassWord').value;
+        const RePassWord = document.getElementById('ConfirmPassWord').value;
+        const RegExpPattern = /\w{5,}/;
+        if(PassWord!==RePassWord) {
+          alert('パスワードが一致していません')
+        }else if (ID.match(RegExpPattern) && PassWord.match(RegExpPattern)) {
+          socket.emit('RegistReq', ID, PassWord);
+        }else {
+          alert('IDとパスワードは少なくとも5文字以上の英数字で入力してください');
+        }
+        socket.on('RegistSuc', () => {
+          props.onChangeScene( SCENE_TITLE );
+        })
+      }}>
         <div className="input-group col-xs-4 form" >
           <span className="input-group-addon"><i className="glyphicon glyphicon-user"></i></span>
           <input type="text" name="ID" id="ID" className="form-control" placeholder="ID" autoFocus={true}/>
@@ -22,22 +38,7 @@ export default function Regist(props) {
           <span className="input-group-addon"><i className="glyphicon glyphicon-lock"></i></span>
           <input type="password" name='ConfirmPassWord' id="ConfirmPassWord" className="form-control" placeholder="ConfirmPasswrod" />
         </div>
-        <div><button className="btn btn-primary btn-lg" onClick={() => {
-          const ID = document.getElementById('ID').value;
-          const PassWord = document.getElementById('PassWord').value;
-          const RePassWord = document.getElementById('ConfirmPassWord').value;
-          const RegExpPattern = /\w{5,}/;
-          if(PassWord!==RePassWord) {
-            alert('パスワードが一致していません')
-          }else if (ID.match(RegExpPattern) && PassWord.match(RegExpPattern)) {
-            socket.emit('RegistReq', ID, PassWord);
-          }else {
-            alert('IDとパスワードは少なくとも5文字以上の英数字で入力してください');
-          }
-          socket.on('RegistSuc', () => {
-            
-          })
-        }}>
+        <div><button type="submit" className="btn btn-primary btn-lg">
           登録
         </button>
         <button className="btn" onClick={() => {props.onChangeScene( SCENE_TITLE )}}>戻る</button></div>
