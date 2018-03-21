@@ -34,7 +34,6 @@ export default function Login(props) {
           <button className="btn" onClick={() => {props.onChangeScene( SCENE_TITLE )}}>戻る</button>
         </div>
       </form>
-     
     </div>
   )
 }

@@ -15,8 +15,7 @@ const serverConfig = {
         presets: [["env", {
           "targets": {
             "node": "9.3.0",
-          },
-          "exclude": ["transform-regenerator"]
+          }
         }]]
       }
     }]
@@ -35,6 +34,7 @@ const clientConfig = {
     rules: [{
       test: /\.(js|jsx)$/,
       loader: 'babel-loader',
+      options: {presets: ["env", "react"]}
     }]
   },
   resolve: {

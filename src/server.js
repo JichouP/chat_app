@@ -51,7 +51,7 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
    * @returns {Boolean} isFound?
    */
   const isDataExist = (db, collection, obj) => {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       client
         .db(db)
         .collection(collection)
@@ -91,7 +91,6 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
     socket.on('LoginReq', async (ID, Pass) => {
       console.log(`[Login] ID:${ID}, PassWord:${Pass}`);
       if (await isDataExist(dbName, userCol, { ID: ID, Pass: createHash(Pass) })) {
-        console.log(`Found UserData! ID:${docs[0].ID}, Pass:${docs[0].Pass}`);
         socketid[socket.id] = ID;
         io.to(socket.id).emit('LoginSuccess');
         console.log(socketid);
@@ -102,9 +101,7 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
     //Regist
     socket.on('RegistReq', (ID, Pass) => {
       console.log(
-        `[Regist] ID:${ID}, PassWord:${Pass}, Hash:${shajs('sha256')
-          .update(Pass)
-          .digest('hex')}`
+        `[Regist] ID:${ID}, PassWord:${Pass}, Hash:${createHash()}`
       );
       const promise = new Promise(async (resolve, reject) => {
         if (await isDataExist(dbName, userCol, { ID: ID, Pass: createHash(Pass) })) {
