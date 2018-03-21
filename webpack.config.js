@@ -15,7 +15,8 @@ const serverConfig = {
         presets: [["env", {
           "targets": {
             "node": "9.3.0",
-          }
+          },
+          "exclude": ["transform-regenerator"]
         }]]
       }
     }]
