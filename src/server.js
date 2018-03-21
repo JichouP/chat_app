@@ -1,5 +1,3 @@
-import { CLIENT_RENEG_LIMIT } from 'tls';
-
 const express = require('express')();
 const server = require('http').createServer(express);
 const socketio = require('socket.io');
@@ -17,11 +15,26 @@ express.use(morgan('combined'));
 
 //mongodb
 const dbName = 'chatApp';
-const collectionNameUser = 'userData';
-const insertUserData = (ID, Pass) => {
+const userCol = 'userData';
+const createUser = (ID, Pass) => {
   MongoClient.connect('mongodb://localhost:27017', (err, client) => {
-    client.db(dbName).collection(collectionNameUser).insert({'ID': ID, 'Pass': shajs('sha256').update(Pass).digest('hex')});
+    client.db(dbName).collection(userCol).insert({'ID': ID, 'Pass': shajs('sha256').update(Pass).digest('hex')});
     client.close();
+    resolve(client);
+  })
+}
+const readUser = (ID, Pass) => {
+  MongoClient.connect('mongodb://localhost:27017', (err, client) => {
+    client
+      .db(dbName)
+      .collection(userCol)
+      .find({'ID': ID, 'Pass': shajs('sha256').update(Pass).digest('hex')})
+      .toArray((err, docs) => {
+        if(docs === undefined) {
+          return 0;
+        }
+        
+      })
   })
 }
 //rooting
@@ -76,7 +89,7 @@ io.on('connection', (socket) => {
       });
     })
     promise.then(
-      insertUserData(ID, Pass)
+      createUser(ID, Pass)
     ).catch(() => {
       console.log('There are error');
     });
