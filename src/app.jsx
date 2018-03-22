@@ -10,7 +10,8 @@ import { SCENE_TITLE, SCENE_LOGIN, SCENE_REGIST, SCENE_LOBBY, SCENE_ROOM } from 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { scene: SCENE_TITLE };
+    this.socket = io();
+    this.state = { scene: SCENE_TITLE , socket: this.socket };
     this.onChangeScene = this.onChangeScene.bind(this);
   }
   onChangeScene(nextScene) {

@@ -1,10 +1,8 @@
 import React from 'react';
-import io from 'socket.io-client';
 import { SCENE_TITLE } from './scenes'
 
 export default function Regist(props) {
-  const socket = io();
-  socket.on('RegistFailed', () => {
+  props.socket.on('RegistFailed', () => {
     alert('This ID is already registed');
   });
   return (
@@ -18,11 +16,11 @@ export default function Regist(props) {
         if(PassWord!==RePassWord) {
           alert('パスワードが一致していません')
         }else if (ID.match(RegExpPattern) && PassWord.match(RegExpPattern)) {
-          socket.emit('RegistReq', ID, PassWord);
+          props.socket.emit('RegistReq', ID, PassWord);
         }else {
           alert('IDとパスワードは少なくとも5文字以上の英数字で入力してください');
         }
-        socket.on('RegistSuc', () => {
+        props.socket.on('RegistSuc', () => {
           props.onChangeScene( SCENE_TITLE );
         })
       }}>

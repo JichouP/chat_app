@@ -57,10 +57,23 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
         .collection(collection)
         .find(obj)
         .toArray((err, docs) => {
+          console.log(docs);
           if (docs[0] === undefined) {
             resolve(false);
           }
           resolve(true);
+        });
+    });
+  };
+
+  const getUserData = (db, collection, obj) => {
+    return new Promise((resolve, reject) => {
+      client
+        .db(db)
+        .collection(collection)
+        .find(obj)
+        .toArray((err, docs) => {
+          resolve(docs[0]);
         });
     });
   };
@@ -71,7 +84,7 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
    * @param {string} Pass
    */
   const createUser = (ID, Pass) => {
-    insertData(dbName, userCol, { ID: ID, Pass: Pass });
+    insertData(dbName, userCol, { ID: ID, Pass: Pass, Rooms: [] });
   };
 
   /**
@@ -87,13 +100,16 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
   //socket
   io.on('connection', socket => {
     console.log('Connection Success!!!');
+    console.log(socket.id);
+    socket.on('disconnect', (reason) => {
+      console.log(socket.id + ' is disconnected Reason: ' + reason);
+    })
     //Login
     socket.on('LoginReq', async (ID, Pass) => {
       console.log(`[Login] ID:${ID}, PassWord:${Pass}`);
       if (await isUserExist(dbName, userCol, { ID: ID, Pass: createHash(Pass) })) {
         socketid[socket.id] = ID;
         io.to(socket.id).emit('LoginSuccess');
-        console.log(socketid);
       } else {
         console.log('Not Found!');
       }
@@ -115,10 +131,12 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
         });
     });
 
-    //Request Room in Lobby
-    let rooms = ['room1', 'room2', 'room3'];
-    socket.on('RoomReq', () => {
-      io.to(socket.id).emit('RoomRes', rooms);
+    //Request Room from Lobby
+    socket.on('RoomReq', async () => {
+      console.log(socket.id + 'これはテストです' + socketid[socket.id]);
+      const rooms = await getUserData(dbName, userCol, { ID: socketid[socket.id] });
+      console.log(rooms);
+      io.to(socket.id).emit('RoomRes', rooms.Rooms);
     });
 
     //Enter Room Request

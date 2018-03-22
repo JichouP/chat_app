@@ -2,6 +2,7 @@ import React from 'react'
 import { SCENE_LOGIN } from './scenes'
 import { SCENE_REGIST } from './scenes'
 
+
 export default function Title(props) {
   return (
     <div>

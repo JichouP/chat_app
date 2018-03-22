@@ -1,5 +1,4 @@
 import React from 'react';
-import io from 'socket.io-client';
 import { SCENE_ROOM, SCENE_TITLE } from './scenes';
 
 export default class Lobby extends React.Component {
@@ -7,13 +6,12 @@ export default class Lobby extends React.Component {
     super(props);
     this.lobby = [];
     this.state = { lobby: this.lobby }
-    this.socket = io();
-    this.socket.on('EnterRes', (value) => {
+    this.props.socket.on('EnterRes', (value) => {
       this.setState({ room: value });
       this.props.onChangeScene( SCENE_ROOM );
     });
-    this.socket.emit('RoomReq');
-    this.socket.on('RoomRes', (rooms) => {
+    this.props.socket.emit('RoomReq');
+    this.props.socket.on('RoomRes', (rooms) => {
       for(let value of rooms) {
         this.lobby.push(<div key={value}>
                         <label className="label label-default" htmlFor={value}>{value}</label>
@@ -25,7 +23,7 @@ export default class Lobby extends React.Component {
   }
 
   onClick(value) {
-    this.socket.emit('EnterReq', value);
+    this.props.socket.emit('EnterReq', value);
   }
 
   render() {
