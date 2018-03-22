@@ -100,20 +100,19 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
     });
     //Regist
     socket.on('RegistReq', (ID, Pass) => {
-      console.log(
-        `[Regist] ID:${ID}, PassWord:${Pass}, Hash:${createHash()}`
-      );
-      const promise = new Promise(async (resolve, reject) => {
+      console.log(`[Regist] ID:${ID}, Hash:${createHash(Pass)}`);
+      new Promise(async (resolve, reject) => {
         if (await isUserExist(dbName, userCol, { ID: ID })) {
           console.log('There are already same ID');
           io.to(socket.id).emit('RegistFailed');
         } else {
           resolve();
         }
-      });
-      promise.then(createUser(ID, createHash(Pass))).catch(() => {
-        console.log('There are error');
-      });
+      })
+        .then(createUser(ID, createHash(Pass)))
+        .catch(() => {
+          console.log('There are error');
+        });
     });
 
     //Request Room in Lobby
