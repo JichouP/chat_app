@@ -50,7 +50,7 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
    * @param {Object} obj
    * @returns {Boolean} isFound?
    */
-  const isDataExist = (db, collection, obj) => {
+  const isUserExist = (db, collection, obj) => {
     return new Promise((resolve, reject) => {
       client
         .db(db)
@@ -90,7 +90,7 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
     //Login
     socket.on('LoginReq', async (ID, Pass) => {
       console.log(`[Login] ID:${ID}, PassWord:${Pass}`);
-      if (await isDataExist(dbName, userCol, { ID: ID, Pass: createHash(Pass) })) {
+      if (await isUserExist(dbName, userCol, { ID: ID, Pass: createHash(Pass) })) {
         socketid[socket.id] = ID;
         io.to(socket.id).emit('LoginSuccess');
         console.log(socketid);
@@ -104,7 +104,7 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
         `[Regist] ID:${ID}, PassWord:${Pass}, Hash:${createHash()}`
       );
       const promise = new Promise(async (resolve, reject) => {
-        if (await isDataExist(dbName, userCol, { ID: ID, Pass: createHash(Pass) })) {
+        if (await isUserExist(dbName, userCol, { ID: ID })) {
           console.log('There are already same ID');
           io.to(socket.id).emit('RegistFailed');
         } else {
