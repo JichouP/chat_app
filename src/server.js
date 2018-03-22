@@ -11,7 +11,7 @@ const assert = require('assert');
 const shajs = require('sha.js');
 
 //log
-express.use(morgan('combined'));
+// express.use(morgan('combined'));
 
 //rooting
 express.get('*', (req, res) => {
