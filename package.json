@@ -5,7 +5,8 @@
   "main": "app.jsx",
   "scripts": {
     "test": "jest",
-    "build": "webpack --mode development",
+    "build": "webpack",
+    "devbuild": "webpack --mode development",
     "start": "webpack -w --mode development",
     "node": "nodemon public/server.js"
   },
