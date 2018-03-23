@@ -1,3 +1,34 @@
-div.title {margin: 50px 0 0 200px;}
-div.form {margin: 5px 0 0 0;}
-button {margin: 10px 10px 0px 0px;}
+body {
+  background: #eee;
+}
+div.jumbotron {
+  background: #ddd;
+}
+div.signin {
+  margin-top: 80px;
+  margin-bottom: 80px;
+}
+div.lobby {
+  margin-top: 80px;
+  margin-bottom: 80px;
+}
+form.signin {
+  max-width: 380px;
+  padding: 15px 35px 100px;
+  margin: 0 auto;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+form.lobby {
+  max-width: 380px;
+  padding: 15px 35px 30px;
+  margin: 0 auto;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+button {
+  margin: 10px 10px 0px 0px;
+}
+button.btn-title {
+  font-size: 300%;
+}
