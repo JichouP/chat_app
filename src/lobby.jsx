@@ -30,6 +30,11 @@ export default class Lobby extends React.Component {
   render() {
     return (
       <div className="container">
+        <div className="lobby-top" >
+          <div className="createroom" >
+            <button className="btn btn-lg btn-success">新しい部屋を作成する</button>
+          </div>
+        </div>
         <div className="lobby" >
           <form className="lobby" >
             {this.lobby}

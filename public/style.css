@@ -12,6 +12,9 @@ div.lobby {
   margin-top: 80px;
   margin-bottom: 80px;
 }
+div.createroom {
+  text-align: right;
+}
 form.signin {
   max-width: 380px;
   padding: 15px 35px 100px;
