@@ -11,14 +11,15 @@ export default class Lobby extends React.Component {
       this.props.onChangeScene( SCENE_ROOM );
     });
     this.props.socket.emit('RoomReq');
-    this.props.socket.on('RoomRes', (rooms) => {
-      for(let value of rooms) {
-        this.lobby.push(<div key={value}>
-                        <label className="label label-default" htmlFor={value}>{value}</label>
-                        <button id={value} onClick={() => {this.onClick(value)}}>Join</button>
-                      </div>)
-        this.setState({ lobby: this.lobby });
-      }
+    this.props.socket.on('RoomRes', (rooms, unreads) => {
+      this.lobby = rooms.map((currentValue, index, array) => {
+        return(
+          <div key={index}>
+            <a className="list-group-item" onClick={() => {this.onClick(currentValue)}}>{currentValue}<span className="badge">{unreads[index]}</span></a>
+          </div>
+        )
+      })
+      this.setState({lobby: this.lobby});
     })
   }
 
@@ -27,6 +28,14 @@ export default class Lobby extends React.Component {
   }
 
   render() {
-    return <div>{this.lobby}</div>
+    return (
+      <div className="container">
+        <div className="lobby" >
+          <form className="lobby" >
+            {this.lobby}
+          </form>
+        </div>
+      </div>
+    )
   }
 }
