@@ -24,6 +24,7 @@ server.listen(3000, () => {
 //mongodb
 const dbName = 'chatApp';
 const userCol = 'userData';
+const roomCOl = 'roomData';
 
 //storage of socketid
 let socketid = {};

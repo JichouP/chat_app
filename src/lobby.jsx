@@ -32,6 +32,7 @@ export default class Lobby extends React.Component {
       <div className="container">
         <div className="lobby-top" >
           <div className="createroom" >
+            <button className="btn btn-lg btn-primary" >既存の部屋に参加する</button>
             <button className="btn btn-lg btn-success">新しい部屋を作成する</button>
           </div>
         </div>
