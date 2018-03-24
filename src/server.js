@@ -32,17 +32,47 @@ let socketid = {};
 //connect to Mongo
 MongoClient.connect('mongodb://localhost:27017', (err, client) => {
   /**
-   * Insert a object to DB
+   * Create new object to DB
    * @param {string} db
    * @param {string} collection
    * @param {Object} obj
    */
-  const insertData = (db, collection, obj) => {
+  const createData = (db, collection, obj) => {
     client
       .db(db)
       .collection(collection)
       .insert(obj);
   };
+
+  /**
+   * Overwrite object
+   * @param {string} db 
+   * @param {string} collection 
+   * @param {Object} query 
+   * @param {Object} update 
+   * @param {Boolean} upsert 
+   */
+  const updateData = (db, collection, query, update, upsert) => {
+    client.db(dbName).collection(collection).update(query, update, {
+      upsert: upsert
+    });
+  }
+
+  /**
+   * Add data in Object
+   * @param {string} db 
+   * @param {string} collection 
+   * @param {Object} query 
+   * @param {Object} add 
+   * @param {Boolean} upsert 
+   */
+  const addData = (db, collection, query, add, upsert) => {
+    client.db(dbName).collection(collection).update(query, {
+      $set: add
+    }, {
+      upsert: upsert
+    })
+  }
 
   /**
    * Find a object from DB
@@ -85,7 +115,7 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
    * @param {string} Pass
    */
   const createUser = (ID, Pass) => {
-    insertData(dbName, userCol, {
+    createData(dbName, userCol, {
       ID: ID,
       Pass: Pass,
       Rooms: []
@@ -166,12 +196,36 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
 
     //Create Room Request
     socket.on('CreateRoomReq', name => {
-      const CHARSET = 'abcdefghijklmnopqrstuvwxyz0123456789';
-      let salt = '';
-      for (let i = 0; i < 20; i++) {
-        salt += CHARSET[Math.floor(Math.random() * CHARSET.length)];
-      }
-      const roomHash = createHash(salt + name);
+      new Promise((resolve, reject) => {
+        const CHARSET = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let salt = '';
+        for (let i = 0; i < 20; i++) {
+          salt += CHARSET[Math.floor(Math.random() * CHARSET.length)];
+        }
+        const roomHash = createHash(salt + name);
+        resolve(roomHash);
+      }).then((roomHash) => {
+        if (isUserExist(dbName, roomCOl, {
+            ID: roomHash
+          })) {
+          reject('room');
+        } else {
+          resolve(roomHash);
+        };
+      }).then((roomHash) => {
+        createData(dbName, roomCOl, {
+          name: name,
+          ID: roomHash
+        });
+        resolve(roomHash);
+      }).then((roomHash) => {
+        addData(dbName, userCol, {ID: socketid[socket.id]}, {Rooms: [roomHash]});
+      }).catch((reason) => {
+        if (reason === 'room') {
+          //There are the same ID
+          io.to(socket.id).emit('CreateRoomFailed', '部屋の作成に失敗しました。もう一度試してください')
+        }
+      })
     })
   });
 });
