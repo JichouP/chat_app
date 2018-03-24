@@ -10,15 +10,23 @@ export default class Lobby extends React.Component {
       this.setState({ room: value });
       this.props.onChangeScene( SCENE_ROOM );
     });
-    this.props.socket.emit('RoomReq');
-    this.props.socket.on('RoomRes', (rooms, unreads) => {
-      this.lobby = rooms.map((currentValue, index, array) => {
-        return(
-          <div key={index}>
-            <a className="list-group-item" onClick={() => {this.onClick(currentValue)}}>{currentValue}<span className="badge">{unreads[index]}</span></a>
+    this.props.socket.emit('RoomListReq');
+    this.props.socket.on('RoomListRes', (rooms, unreads) => {
+      if(rooms !== null){
+        this.lobby = rooms.map((currentValue, index, array) => {
+          return(
+            <div key={index}>
+              <a className="list-group-item" onClick={() => {this.onClick(currentValue)}}>{currentValue}<span className="badge">{unreads[index]}</span></a>
+            </div>
+          )
+        })
+      } else {
+        this.lobby = (
+          <div>
+            <a className="list-group-item">参加可能な部屋がありません。部屋に参加するか、新しい部屋を作成してください</a>
           </div>
         )
-      })
+      }
       this.setState({lobby: this.lobby});
     })
   }
