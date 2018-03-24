@@ -206,6 +206,7 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
         resolve(roomHash);
       }).then((roomHash) => {
         if (isUserExist(dbName, roomCOl, {
+            type: 'meta',
             ID: roomHash
           })) {
           reject('room');
@@ -214,12 +215,15 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
         };
       }).then((roomHash) => {
         createData(dbName, roomCOl, {
+          type: 'meta',
           name: name,
           ID: roomHash
         });
         resolve(roomHash);
       }).then((roomHash) => {
         addData(dbName, userCol, {ID: socketid[socket.id]}, {Rooms: [roomHash]});
+      }).then(() => {
+        io.to(socket.id).emit('CreateRoomSuccess');
       }).catch((reason) => {
         if (reason === 'room') {
           //There are the same ID
@@ -227,5 +231,12 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
         }
       })
     })
+
+    //Receive message
+    socket.on('sendmsg', (msg, roomID) => {
+      new Promise((resolve, reject) => {
+        createData(dbName, roomCOl, {})
+      })
+    });
   });
 });
