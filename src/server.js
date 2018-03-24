@@ -85,7 +85,11 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
    * @param {string} Pass
    */
   const createUser = (ID, Pass) => {
-    insertData(dbName, userCol, { ID: ID, Pass: Pass, Rooms: [] });
+    insertData(dbName, userCol, {
+      ID: ID,
+      Pass: Pass,
+      Rooms: []
+    });
   };
 
   /**
@@ -95,8 +99,8 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
    */
   const createHash = data =>
     shajs('sha256')
-      .update(data)
-      .digest('hex');
+    .update(data)
+    .digest('hex');
 
   //socket
   io.on('connection', socket => {
@@ -108,7 +112,10 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
     //Login
     socket.on('LoginReq', async (ID, Pass) => {
       console.log(`[Login] ID:${ID}, PassWord:${Pass}`);
-      if (await isUserExist(dbName, userCol, { ID: ID, Pass: createHash(Pass) })) {
+      if (await isUserExist(dbName, userCol, {
+          ID: ID,
+          Pass: createHash(Pass)
+        })) {
         socketid[socket.id] = ID;
         io.to(socket.id).emit('LoginSuccess');
       } else {
@@ -119,14 +126,16 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
     socket.on('RegistReq', (ID, Pass) => {
       console.log(`[Regist] ID:${ID}, Hash:${createHash(Pass)}`);
       new Promise(async (resolve, reject) => {
-        if (await isUserExist(dbName, userCol, { ID: ID })) {
-          console.log('There are already same ID');
-          io.to(socket.id).emit('RegistFailed');
-          resolve(false);
-        } else {
-          resolve(true);
-        }
-      })
+          if (await isUserExist(dbName, userCol, {
+              ID: ID
+            })) {
+            console.log('There are already same ID');
+            io.to(socket.id).emit('RegistFailed');
+            resolve(false);
+          } else {
+            resolve(true);
+          }
+        })
         .then(isOk => {
           if (isOk) {
             createUser(ID, createHash(Pass));
@@ -137,13 +146,15 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
         });
     });
 
-    //Request Room from Lobby
-    socket.on('RoomReq', async () => {
+    //Request Room List from Lobby
+    socket.on('RoomListReq', async () => {
       console.log(socket.id + 'これはテストです' + socketid[socket.id]);
-      const rooms = await getUserData(dbName, userCol, { ID: socketid[socket.id] });
+      const rooms = await getUserData(dbName, userCol, {
+        ID: socketid[socket.id]
+      });
       const unreads = [10, 20, 30];
       console.log(rooms);
-      io.to(socket.id).emit('RoomRes', rooms.Rooms, unreads);
+      io.to(socket.id).emit('RoomListRes', rooms.Rooms, unreads);
     });
 
     //Enter Room Request
@@ -152,5 +163,15 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
       socket.join(value);
       io.to(value).emit('EnterRes', value);
     });
+
+    //Create Room Request
+    socket.on('CreateRoomReq', name => {
+      const CHARSET = 'abcdefghijklmnopqrstuvwxyz0123456789';
+      let salt = '';
+      for (let i = 0; i < 20; i++) {
+        salt += CHARSET[Math.floor(Math.random() * CHARSET.length)];
+      }
+      const roomHash = createHash(salt + name);
+    })
   });
 });
