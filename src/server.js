@@ -75,6 +75,29 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
   }
 
   /**
+   * 
+   * @param {string} db 
+   * @param {string} collection 
+   * @param {Object} obj 
+   */
+  const readData = (db, collection, obj) => {
+    return new Promise((resolve, reject) => {
+      client
+        .db(db)
+        .collection(collection)
+        .find(obj)
+        .toArray((err, docs) => {
+          resolve(docs);
+        });
+    });
+  };
+
+  const readRoomList = async(userID) => {
+    const data = await readData(dbName, userCol, {ID: userID});
+    return data.Rooms;
+  }
+  
+  /**
    * Find a object from DB
    * @param {string} db
    * @param {string} collection
@@ -97,25 +120,9 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
     });
   };
 
-  const getUserData = (db, collection, obj) => {
-    return new Promise((resolve, reject) => {
-      client
-        .db(db)
-        .collection(collection)
-        .find(obj)
-        .toArray((err, docs) => {
-          resolve(docs[0]);
-        });
-    });
-  };
+ 
 
-  const getRoomList = (db, collection) => {
-    return client
-      .db(db)
-      .collection(collection)
-      .find({})
-      .toArray();
-  }
+
 
   /**
    * Create a user data
@@ -187,7 +194,7 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
     //Request Room List from Lobby
     socket.on('RoomListReq', async () => {
       console.log(socket.id + 'これはテストです' + socketid[socket.id]);
-      const rooms = await getRoomList(dbName, roomCOl, {
+      const rooms = await readRoomList(dbName, roomCOl, {
         ID: socketid[socket.id]
       });
       const unreads = [10, 20, 30];

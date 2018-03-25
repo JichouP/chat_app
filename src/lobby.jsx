@@ -13,6 +13,7 @@ export default class Lobby extends React.Component {
     });
     this.props.socket.emit('RoomListReq');
     this.props.socket.on('RoomListRes', (rooms, unreads) => {
+      console.log(rooms);
       if (rooms !== null) {
         this.setState({
           lobby: rooms.map((currentValue, index, array) => {
