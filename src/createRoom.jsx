@@ -5,7 +5,13 @@ export default function CreateRoom(props) {
   return (
     <div>
       <div>
-        <form onSubmit={e => {e.preventDefault()}}>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+            const name_value = document.getElementById('name').value;
+            props.socket.emit('CreateRoomReq', name_value);
+          }}
+        >
           <h1>新しい部屋を作る</h1>
           <div>
             <input
@@ -20,9 +26,6 @@ export default function CreateRoom(props) {
           <div>
             <button
               type="submit"
-              onClick={() => {
-                props.socket.emit('CreateRoomReq', document.getElementById('name').value);
-              }}
             >
               部屋作成
             </button>
