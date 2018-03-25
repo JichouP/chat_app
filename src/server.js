@@ -38,7 +38,7 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
    * @param {Object} obj
    */
   const createData = (db, collection, obj) => {
-    client
+    return client
       .db(db)
       .collection(collection)
       .insert(obj);
@@ -46,11 +46,11 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
 
   /**
    * Overwrite object
-   * @param {string} db 
-   * @param {string} collection 
-   * @param {Object} query 
-   * @param {Object} update 
-   * @param {Boolean} upsert 
+   * @param {string} db
+   * @param {string} collection
+   * @param {Object} query
+   * @param {Object} update
+   * @param {Boolean} upsert
    */
   const updateData = (db, collection, query, update, upsert) => {
     client.db(dbName).collection(collection).update(query, update, {
@@ -60,11 +60,11 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
 
   /**
    * Add data in Object
-   * @param {string} db 
-   * @param {string} collection 
-   * @param {Object} query 
-   * @param {Object} add 
-   * @param {Boolean} upsert 
+   * @param {string} db
+   * @param {string} collection
+   * @param {Object} query
+   * @param {Object} add
+   * @param {Boolean} upsert
    */
   const addData = (db, collection, query, add, upsert) => {
     client.db(dbName).collection(collection).update(query, {
@@ -108,6 +108,14 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
         });
     });
   };
+
+  const getRoomList = (db, collection) => {
+    return client
+      .db(db)
+      .collection(collection)
+      .find({})
+      .toArray();
+  }
 
   /**
    * Create a user data
@@ -179,12 +187,18 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
     //Request Room List from Lobby
     socket.on('RoomListReq', async () => {
       console.log(socket.id + 'これはテストです' + socketid[socket.id]);
-      const rooms = await getUserData(dbName, userCol, {
+      const rooms = await getRoomList(dbName, roomCOl, {
         ID: socketid[socket.id]
       });
       const unreads = [10, 20, 30];
+      console.log('')
+      console.log('******** ROOMS ********')
       console.log(rooms);
-      io.to(socket.id).emit('RoomListRes', rooms.Rooms, unreads);
+      if (rooms === undefined) {
+        io.to(socket.id).emit('RoomListRes', null, unreads);
+        return;
+      }
+      io.to(socket.id).emit('RoomListRes', rooms.map(v => v.name), unreads);
     });
 
     //Enter Room Request
@@ -196,16 +210,15 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
 
     //Create Room Request
     socket.on('CreateRoomReq', name => {
-      new Promise((resolve, reject) => {
+      new Promise(async (resolve, reject) => {
         const CHARSET = 'abcdefghijklmnopqrstuvwxyz0123456789';
         let salt = '';
         for (let i = 0; i < 20; i++) {
           salt += CHARSET[Math.floor(Math.random() * CHARSET.length)];
         }
         const roomHash = createHash(salt + name);
-        resolve(roomHash);
-      }).then((roomHash) => {
-        if (isUserExist(dbName, roomCOl, {
+        console.log(roomHash)
+        if (await isUserExist(dbName, roomCOl, {
             type: 'meta',
             ID: roomHash
           })) {
@@ -213,13 +226,13 @@ MongoClient.connect('mongodb://localhost:27017', (err, client) => {
         } else {
           resolve(roomHash);
         };
-      }).then((roomHash) => {
-        createData(dbName, roomCOl, {
+      }).then(async (roomHash) => {
+        await createData(dbName, roomCOl, {
           type: 'meta',
           name: name,
           ID: roomHash
         });
-        resolve(roomHash);
+        return roomHash;
       }).then((roomHash) => {
         addData(dbName, userCol, {ID: socketid[socket.id]}, {Rooms: [roomHash]});
       }).then(() => {
