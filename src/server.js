@@ -76,7 +76,8 @@ MongoClient.connect(dbUri, (err, client) => {
   }
 
   /**
-   * 
+   * Read and return data from DB
+   * Require 'async', 'aware'
    * @param {string} db 
    * @param {string} collection 
    * @param {Object} obj 
@@ -93,6 +94,10 @@ MongoClient.connect(dbUri, (err, client) => {
     });
   };
 
+  /**
+   * Read and return data from UserCollection
+   * @param {string} userID 
+   */
   const readRoomList = async(userID) => {
     const data = await readData(dbName, userCol, {ID: userID});
     return data.Rooms;
@@ -120,10 +125,6 @@ MongoClient.connect(dbUri, (err, client) => {
         });
     });
   };
-
- 
-
-
 
   /**
    * Create a user data
