@@ -2,6 +2,10 @@ import React from 'react';
 import { SCENE_ROOM, SCENE_TITLE, SCENE_CREATEROOM } from './scenes';
 
 export default class Lobby extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { lobby: [] };
+  }
   componentDidMount() {
     this.props.socket.on('EnterRes', value => {
       this.setState({ room: value });
@@ -39,10 +43,6 @@ export default class Lobby extends React.Component {
         });
       }
     });
-  }
-  constructor(props) {
-    super(props);
-    this.state = { lobby: [] };
   }
 
   onClick(value) {

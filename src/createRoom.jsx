@@ -5,11 +5,7 @@ export default function CreateRoom(props) {
   return (
     <div>
       <div>
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-          }}
-        >
+        <form onSubmit={e => {e.preventDefault()}}>
           <h1>新しい部屋を作る</h1>
           <div>
             <input
@@ -32,8 +28,7 @@ export default function CreateRoom(props) {
             </button>
             <button
               type="button"
-              onClick={e => {
-                e.preventDefault();
+              onClick={() => {
                 props.onChangeScene(SCENE_LOBBY);
               }}
             >
