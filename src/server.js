@@ -22,7 +22,7 @@ server.listen(3000, () => {
 });
 
 //mongodb
-const dbUri = 'mongodb://localhost:27017'
+const dbUri = 'mongodb://localhost:27017';
 const dbName = 'chatApp';
 const userCol = 'userData';
 const roomCOl = 'roomData';
@@ -54,10 +54,13 @@ MongoClient.connect(dbUri, (err, client) => {
    * @param {Boolean} upsert
    */
   const updateData = (db, collection, query, update, upsert) => {
-    client.db(dbName).collection(collection).update(query, update, {
-      upsert: upsert
-    });
-  }
+    client
+      .db(dbName)
+      .collection(collection)
+      .update(query, update, {
+        upsert: upsert,
+      });
+  };
 
   /**
    * Add data in Object
@@ -68,19 +71,26 @@ MongoClient.connect(dbUri, (err, client) => {
    * @param {Boolean} upsert
    */
   const addData = (db, collection, query, add, upsert) => {
-    client.db(dbName).collection(collection).update(query, {
-      $set: add
-    }, {
-      upsert: upsert
-    })
-  }
+    client
+      .db(dbName)
+      .collection(collection)
+      .update(
+        query,
+        {
+          $set: add,
+        },
+        {
+          upsert: upsert,
+        }
+      );
+  };
 
   /**
    * Read and return data from DB
    * Require 'async', 'aware'
-   * @param {string} db 
-   * @param {string} collection 
-   * @param {Object} obj 
+   * @param {string} db
+   * @param {string} collection
+   * @param {Object} obj
    */
   const readData = (db, collection, obj) => {
     return new Promise((resolve, reject) => {
@@ -96,13 +106,13 @@ MongoClient.connect(dbUri, (err, client) => {
 
   /**
    * Read and return data from UserCollection
-   * @param {string} userID 
+   * @param {string} userID
    */
-  const readRoomList = async(userID) => {
-    const data = await readData(dbName, userCol, {ID: userID});
+  const readRoomList = async userID => {
+    const data = await readData(dbName, userCol, { ID: userID });
     return data.Rooms;
-  }
-  
+  };
+
   /**
    * Find a object from DB
    * @param {string} db
@@ -135,7 +145,7 @@ MongoClient.connect(dbUri, (err, client) => {
     createData(dbName, userCol, {
       ID: ID,
       Pass: Pass,
-      Rooms: []
+      Rooms: [],
     });
   };
 
@@ -146,8 +156,8 @@ MongoClient.connect(dbUri, (err, client) => {
    */
   const createHash = data =>
     shajs('sha256')
-    .update(data)
-    .digest('hex');
+      .update(data)
+      .digest('hex');
 
   //socket
   io.on('connection', socket => {
@@ -159,10 +169,12 @@ MongoClient.connect(dbUri, (err, client) => {
     //Login
     socket.on('LoginReq', async (ID, Pass) => {
       console.log(`[Login] ID:${ID}, PassWord:${Pass}`);
-      if (await isUserExist(dbName, userCol, {
+      if (
+        await isUserExist(dbName, userCol, {
           ID: ID,
-          Pass: createHash(Pass)
-        })) {
+          Pass: createHash(Pass),
+        })
+      ) {
         socketid[socket.id] = ID;
         io.to(socket.id).emit('LoginSuccess');
       } else {
@@ -173,16 +185,18 @@ MongoClient.connect(dbUri, (err, client) => {
     socket.on('RegistReq', (ID, Pass) => {
       console.log(`[Regist] ID:${ID}, Hash:${createHash(Pass)}`);
       new Promise(async (resolve, reject) => {
-          if (await isUserExist(dbName, userCol, {
-              ID: ID
-            })) {
-            console.log('There are already same ID');
-            io.to(socket.id).emit('RegistFailed');
-            resolve(false);
-          } else {
-            resolve(true);
-          }
-        })
+        if (
+          await isUserExist(dbName, userCol, {
+            ID: ID,
+          })
+        ) {
+          console.log('There are already same ID');
+          io.to(socket.id).emit('RegistFailed');
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      })
         .then(isOk => {
           if (isOk) {
             createUser(ID, createHash(Pass));
@@ -197,11 +211,11 @@ MongoClient.connect(dbUri, (err, client) => {
     socket.on('RoomListReq', async () => {
       console.log(socket.id + 'これはテストです' + socketid[socket.id]);
       const rooms = await readRoomList(dbName, roomCOl, {
-        ID: socketid[socket.id]
+        ID: socketid[socket.id],
       });
       const unreads = [10, 20, 30];
-      console.log('')
-      console.log('******** ROOMS ********')
+      console.log('');
+      console.log('******** ROOMS ********');
       console.log(rooms);
       if (rooms === undefined) {
         io.to(socket.id).emit('RoomListRes', null, unreads);
@@ -226,39 +240,55 @@ MongoClient.connect(dbUri, (err, client) => {
           salt += CHARSET[Math.floor(Math.random() * CHARSET.length)];
         }
         const roomHash = createHash(salt + name);
-        console.log(roomHash)
-        if (await isUserExist(dbName, roomCOl, {
+        console.log(roomHash);
+        if (
+          await isUserExist(dbName, roomCOl, {
             type: 'meta',
-            ID: roomHash
-          })) {
+            ID: roomHash,
+          })
+        ) {
           reject('room');
         } else {
           resolve(roomHash);
-        };
-      }).then(async (roomHash) => {
-        await createData(dbName, roomCOl, {
-          type: 'meta',
-          name: name,
-          ID: roomHash
-        });
-        return roomHash;
-      }).then((roomHash) => {
-        addData(dbName, userCol, {ID: socketid[socket.id]}, {Rooms: [roomHash]});
-      }).then(() => {
-        io.to(socket.id).emit('CreateRoomSuccess');
-      }).catch((reason) => {
-        if (reason === 'room') {
-          //There are the same ID
-          io.to(socket.id).emit('CreateRoomFailed', '部屋の作成に失敗しました。もう一度試してください')
         }
       })
-    })
+        .then(async roomHash => {
+          await createData(dbName, roomCOl, {
+            type: 'meta',
+            name: name,
+            ID: roomHash,
+          });
+          return roomHash;
+        })
+        .then(roomHash => {
+          addData(
+            dbName,
+            userCol,
+            { ID: socketid[socket.id] },
+            { Rooms: [roomHash] }
+          );
+        })
+        .then(() => {
+          io.to(socket.id).emit('CreateRoomSuccess');
+        })
+        .catch(reason => {
+          if (reason === 'room') {
+            //There are the same ID
+            io
+              .to(socket.id)
+              .emit(
+                'CreateRoomFailed',
+                '部屋の作成に失敗しました。もう一度試してください'
+              );
+          }
+        });
+    });
 
     //Receive message
     socket.on('sendmsg', (msg, roomID) => {
       new Promise((resolve, reject) => {
-        createData(dbName, roomCOl, {})
-      })
+        createData(dbName, roomCOl, {});
+      });
     });
   });
 });
