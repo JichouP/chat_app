@@ -21,7 +21,7 @@ export default function CreateRoom(props) {
             <button
               type="submit"
               onClick={() => {
-                props.socket.emit('createRoom', document.getElementById('name'));
+                props.socket.emit('CreateRoomReq', document.getElementById('name').value);
               }}
             >
               部屋作成
