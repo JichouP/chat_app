@@ -22,6 +22,7 @@ server.listen(3000, () => {
 });
 
 //mongodb
+const dbUri = 'mongodb://localhost:27017'
 const dbName = 'chatApp';
 const userCol = 'userData';
 const roomCOl = 'roomData';
@@ -30,7 +31,7 @@ const roomCOl = 'roomData';
 let socketid = {};
 
 //connect to Mongo
-MongoClient.connect('mongodb://localhost:27017', (err, client) => {
+MongoClient.connect(dbUri, (err, client) => {
   /**
    * Create new object to DB
    * @param {string} db
