@@ -30,6 +30,11 @@ const roomCOl = 'roomData';
 //storage of socketid
 let socketid = {};
 
+MongoClient.connect(dbUri)
+  .then(function(client) {
+
+  })
+  .catch(function(err) {});
 //connect to Mongo
 MongoClient.connect(dbUri, (err, client) => {
   /**

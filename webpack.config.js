@@ -2,7 +2,7 @@ const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
 const serverConfig = {
-  entry: path.resolve('src') + '/server.js',
+  entry: path.resolve('src') + '/server/server.js',
   output: {
     path: path.resolve('public'),
     filename: 'server.js'
