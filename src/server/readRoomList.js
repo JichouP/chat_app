@@ -1,7 +1,13 @@
-module.exports = getRoomList = async dbInfo => {
-  return await dbInfo.client
-    .db(dbInfo.db)
-    .collection(USER_LIST_COLLECTION)
+/**
+ * readRoomList
+ * @param {*} serverInfo 
+ */
+const readRoomList = async (serverInfo, collection) => {
+  return await serverInfo.client
+    .db(serverInfo.db)
+    .collection(collection)
     .find({})
     .toArray();
 };
+
+module.exports = readRoomList;

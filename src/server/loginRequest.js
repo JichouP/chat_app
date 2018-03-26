@@ -1,8 +1,19 @@
-module.exports = loginRequest = async (dbInfo, id, pass, registSocketID) => {
-  if (await isUserExist(id, pass)) {
+const isUserExist = require('./isUserExist');
+
+/**
+ * loginRequest
+ * @param {Object} serverInfo
+ * @param {string} id
+ * @param {string} pass
+ * @param {string} registSocketID
+ */
+const loginRequest = async (serverInfo, id, pass, registSocketID) => {
+  if (await isUserExist(serverInfo, 'userData', {ID: id})) {
     const id = registSocketID();
-    io.to(id).emit('LoginSuccess');
+    serverInfo.io.to(id).emit('LoginSuccess');
   } else {
     console.log('not found');
   }
 };
+
+module.exports = loginRequest;
