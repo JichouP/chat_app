@@ -41,7 +41,8 @@ const initSocketConnection = (socket, serverInfo) => {
     loginRequest(serverInfo, id, pass, registSocketID);
   });
   socket.on('RoomListReq', () => {
-    roomListRequest(serverInfo);
+    console.log('server: '+socket.id);
+    roomListRequest(serverInfo, socket);
   });
 };
 
