@@ -22,7 +22,7 @@ export default class Lobby extends React.Component {
                 <a
                   className="list-group-item"
                   onClick={() => {
-                    this.onClick(currentValue);
+                    this.onClick(currentValue)
                   }}
                 >
                   {currentValue}
@@ -35,7 +35,7 @@ export default class Lobby extends React.Component {
       } else {
         this.setState({
           lobby: [
-            <div>
+            <div key="norrom">
               <a className="list-group-item">
                 参加可能な部屋がありません。部屋に参加するか、新しい部屋を作成してください
               </a>

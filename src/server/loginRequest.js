@@ -5,12 +5,12 @@ const isUserExist = require('./isUserExist');
  * @param {Object} serverInfo
  * @param {string} id
  * @param {string} pass
- * @param {string} registSocketID
+ * @param {function} registSocketID
  */
 const loginRequest = async (serverInfo, id, pass, registSocketID) => {
   if (await isUserExist(serverInfo, 'userData', {ID: id})) {
-    const id = registSocketID();
-    serverInfo.io.to(id).emit('LoginSuccess');
+    const socketid = registSocketID(id);
+    serverInfo.io.to(socketid).emit('LoginSuccess');
   } else {
     console.log('not found');
   }

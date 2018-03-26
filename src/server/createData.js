@@ -1,12 +1,12 @@
 /**
  * Create new object to DB
- * @param {string} db
+ * @param {string} serverInfo
  * @param {string} collection
  * @param {Object} obj
  */
-const createData = async (dbInfo, collection, obj) => {
-  await dbInfo.client
-    .db(dbInfo.db)
+const createData = async (serverInfo, collection, obj) => {
+  await serverInfo.client
+    .db(serverInfo.db)
     .collection(collection)
     .insert(obj);
 };

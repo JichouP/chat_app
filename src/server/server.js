@@ -31,20 +31,10 @@ const dbName = 'chatApp';
 const userCol = 'userData';
 const roomCOl = 'roomData';
 
-const initSocketConnection = (socket, serverInfo) => {
-  const socketIDList = {};
-  const registSocketID = ID => {
-    socketIDList[socket.id] = ID;
-    return socket.id;
-  };
-  socket.on('LoginReq', (id, pass) => {
-    loginRequest(serverInfo, id, pass, registSocketID);
-  });
-  socket.on('RoomListReq', () => {
-    console.log('server: '+socket.id);
-    roomListRequest(serverInfo, socket);
-  });
-};
+(async function() {
+  const client = await MongoClient.connect(dbUri);
+  addSocketListeners(new serverInfo(client, dbName, io));
+})();
 
 const addSocketListeners = serverInfo => {
   serverInfo.io.on('connection', socket => {
@@ -53,8 +43,15 @@ const addSocketListeners = serverInfo => {
   });
 };
 
-const init = async () => {
-  const client = await MongoClient.connect(dbUri);
-  addSocketListeners(new serverInfo(client, dbName, io));
+const initSocketConnection = (socket, serverInfo) => {
+  const registSocketID = ID => {
+    serverInfo['socketIDList'][socket.id] = ID;
+    return socket.id;
+  };
+  socket.on('LoginReq', (id, pass) => {
+    loginRequest(serverInfo, id, pass, registSocketID);
+  });
+  socket.on('RoomListReq', () => {
+    roomListRequest(serverInfo, socket.id);
+  });
 };
-init();

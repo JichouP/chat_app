@@ -3,5 +3,6 @@ module.exports = class ServerInfo {
     this.client = client;
     this.db = db;
     this.io = io;
+    this.socketIDList = {};
   }
 };
