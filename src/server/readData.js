@@ -12,6 +12,7 @@ const readData = (serverInfo, collection, obj) => {
       .collection(collection)
       .find(obj)
       .toArray((err, docs) => {
+        console.log(obj);
         resolve(docs);
       });
   });

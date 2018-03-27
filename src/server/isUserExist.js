@@ -7,7 +7,6 @@
  */
 const isUserExist = (serverInfo, collection, obj) => {
   return new Promise((resolve, reject) => {
-    console.log('serverInfo: '+serverInfo);
     serverInfo.client
       .db(serverInfo.db)
       .collection(collection)

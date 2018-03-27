@@ -9,11 +9,16 @@ const createHash = require('./createHash');
  * @param {function} registSocketID
  */
 const loginRequest = async (serverInfo, ID, Pass, registSocketID) => {
-  if (await isUserExist(serverInfo, serverInfo.userCol, { ID: ID,  Pass: createHash(Pass)})) {
+  if (
+    await isUserExist(serverInfo, serverInfo.userCol, {
+      ID: ID,
+      Pass: createHash(Pass),
+    })
+  ) {
     const socketid = registSocketID(ID);
     serverInfo.io.to(socketid).emit('LoginSuccess');
   } else {
-    console.log('not found');
+    serverInfo.io.to(socketid).emit('LoginFailed');
   }
 };
 

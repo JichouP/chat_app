@@ -29,8 +29,6 @@ server.listen(3000, () => {
 //mongodb
 const dbUri = 'mongodb://localhost:27017';
 const dbName = 'chatApp';
-const userCol = 'userData';
-const roomCOl = 'roomData';
 
 (async function() {
   const client = await MongoClient.connect(dbUri);

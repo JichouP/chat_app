@@ -1,13 +1,16 @@
-const readRoomList = require('./readRoomList');
+const readData = require('./readData');
 
 /**
  * roomListRequest
  * @param {Object} serverInfo
  */
 const roomListRequest = async (serverInfo, socketid) => {
-  const userData = await readRoomList(serverInfo, serverInfo.userCol, serverInfo.socketIDList[socketid]);
-  const roomList = userData.Rooms;
-  const unreads = [10, 20, 30]
+  const userData = await readData(serverInfo, serverInfo.userCol, {
+    ID: serverInfo.socketIDList[socketid],
+  });
+  console.log(userData);
+  const roomList = userData[0].Rooms;
+  const unreads = [10, 20, 30];
   serverInfo.io.to(socketid).emit('RoomListRes', roomList, unreads);
 };
 
