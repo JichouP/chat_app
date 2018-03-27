@@ -17,13 +17,10 @@ export function Regist(props) {
             if (PassWord !== RePassWord) {
               alert('パスワードが一致していません');
             } else if (ID.match(RegExpPattern) && PassWord.match(RegExpPattern)) {
-              props.socket.emit('RegistReq', ID, PassWord);
+              props.socket.emit('RegistRequest', ID, PassWord);
             } else {
               alert('IDとパスワードは少なくとも5文字以上の英数字で入力してください');
             }
-            props.socket.on('RegistSuc', () => {
-              props.onChangeScene(SCENE_TITLE);
-            });
           }}
         >
           <h1>Regist</h1>
@@ -72,8 +69,11 @@ export function Regist(props) {
 
 export default lifecycle({
   componentDidMount() {
-    props.socket.on('RegistFailed', () => {
+    this.props.socket.on('RegistFailed', () => {
       alert('This ID is already registed');
+    });
+    this.props.socket.on('RegistSuccess', () => {
+      this.props.onChangeScene(SCENE_TITLE);
     });
   }
 })(Regist);

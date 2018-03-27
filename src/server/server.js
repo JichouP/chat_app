@@ -13,6 +13,7 @@ const shajs = require('sha.js');
 const serverInfo = require('./serverInfo');
 const roomListRequest = require('./roomListRequest');
 const loginRequest = require('./loginRequest');
+const registRequest = require('./registRequest');
 
 //log
 // express.use(morgan('combined'));
@@ -48,9 +49,12 @@ const initSocketConnection = (socket, serverInfo) => {
     serverInfo['socketIDList'][socket.id] = ID;
     return socket.id;
   };
-  socket.on('LoginReq', (id, pass) => {
-    loginRequest(serverInfo, id, pass, registSocketID);
+  socket.on('LoginRequest', (ID, Pass) => {
+    loginRequest(serverInfo, ID, Pass, registSocketID);
   });
+  socket.on('RegistRequest', (ID, Pass) => {
+    registRequest(serverInfo, ID, Pass, socket.id);
+  })
   socket.on('RoomListReq', () => {
     roomListRequest(serverInfo, socket.id);
   });
