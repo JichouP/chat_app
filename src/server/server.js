@@ -1,5 +1,3 @@
-import { promisify } from 'util';
-
 const express = require('express')();
 const server = require('http').createServer(express);
 const socketio = require('socket.io');
@@ -56,4 +54,8 @@ const initSocketConnection = (socket, serverInfo) => {
   socket.on('RoomListReq', () => {
     roomListRequest(serverInfo, socket.id);
   });
+  socket.on('EnterReq', roomID => {
+    socket.join(roomID);
+    io.to(roomID).emit('EnterSuccess', roomID)
+  })
 };
