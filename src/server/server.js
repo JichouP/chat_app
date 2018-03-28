@@ -14,6 +14,7 @@ const loginRequest = require('./loginRequest');
 const registRequest = require('./registRequest');
 const createRoomRequest = require('./createRoomRequest');
 const enterRoomRequest = require('./enterRoomRequest');
+const sendmsgRequest = require('./sendmsgRequest');
 
 //log
 // express.use(morgan('combined'));
@@ -30,7 +31,7 @@ server.listen(3000, () => {
 const dbUri = 'mongodb://localhost:27017';
 const dbName = 'chatApp';
 
-(async function() {
+(async function () {
   const client = await MongoClient.connect(dbUri);
   addSocketListeners(new serverInfo(client, dbName, io));
 })();
@@ -62,4 +63,7 @@ const initSocketConnection = (socket, serverInfo) => {
   socket.on('CreateRoomReq', name => {
     createRoomRequest(serverInfo, name, socket.id);
   });
+  socket.on('sendmsgReq', (msg, roomID) => {
+    sendmsgRequest(serverInfo, msg, roomID, socket.id);
+  })
 };
