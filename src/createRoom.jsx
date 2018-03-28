@@ -3,9 +3,10 @@ import { SCENE_LOBBY } from './scenes';
 
 export default function CreateRoom(props) {
   return (
-    <div>
-      <div>
+    <div className="container">
+      <div className="signin" >
         <form
+          className="signin"
           onSubmit={e => {
             e.preventDefault();
             const name_value = document.getElementById('name').value;
@@ -13,8 +14,9 @@ export default function CreateRoom(props) {
           }}
         >
           <h1>新しい部屋を作る</h1>
-          <div>
+          <div className="input-group col-lg-12 form" >
             <input
+              className="form-control"
               type="text"
               name="name"
               id="name"
@@ -23,14 +25,16 @@ export default function CreateRoom(props) {
               autoFocus={true}
             />
           </div>
-          <div>
+          <div className="col-lg-12" >
             <button
               type="submit"
+              className="btn btn-primary btn-lg"
             >
               部屋作成
             </button>
             <button
               type="button"
+              className="btn btn-lg"
               onClick={() => {
                 props.onChangeScene(SCENE_LOBBY);
               }}
