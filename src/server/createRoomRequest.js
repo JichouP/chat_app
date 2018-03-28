@@ -11,7 +11,7 @@ const createRoomRequest = async (serverInfo, name, socketid) => {
   }
   const roomHash = createHash(salt + name);
   if (
-    await isDataExist(dbName, roomCOl, {
+    await isDataExist(serverInfo, serverInfo.roomCol, {
       ID: roomHash,
     })
   ) {
@@ -19,7 +19,7 @@ const createRoomRequest = async (serverInfo, name, socketid) => {
     serverInfo.io.to(socketid).emit('CreateRoomFailed');
     return -1;
   }
-  await createData(serverInfo, serverInfo.roomCOl, {
+  await createData(serverInfo, serverInfo.roomCol, {
     ID: roomHash,
     name: name,
     chat: [],
