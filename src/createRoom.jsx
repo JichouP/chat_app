@@ -10,7 +10,12 @@ export default function CreateRoom(props) {
           onSubmit={e => {
             e.preventDefault();
             const name_value = document.getElementById('name').value;
-            props.socket.emit('CreateRoomReq', name_value);
+            const RegExpPattern = /\w{1,}/;
+            if (name_value.match(RegExpPattern)) {
+              props.socket.emit('CreateRoomReq', name_value);
+            } else {
+              alert('IDとパスワードは少なくとも1文字以上の英数字で入力してください');
+            }
           }}
         >
           <h1>新しい部屋を作る</h1>

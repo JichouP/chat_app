@@ -6,7 +6,7 @@ const createData = require('./createData');
  * @param {string} Pass
  */
 const createUser = async(serverInfo, ID, Pass) => {
-  await createData(serverInfo, serverInfo.db, serverInfo.userCol, {
+  await createData(serverInfo, serverInfo.userCol, {
     ID: ID,
     Pass: Pass,
     Rooms: [],

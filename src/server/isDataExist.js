@@ -12,7 +12,7 @@ const isDataExist = (serverInfo, collection, obj) => {
       .collection(collection)
       .find(obj)
       .toArray((err, docs) => {
-        console.log(docs);
+        console.log('isDataExist__docs: ' + docs);
         if (docs[0] === undefined) {
           resolve(false);
         }
