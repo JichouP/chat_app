@@ -12,7 +12,7 @@ const addArrayElement = async (serverInfo, collection, query, array, element) =>
     .update(
       query,
       {
-        $addToSet: {array, element},
+        $push: {array, element},
       }
     );
 };
