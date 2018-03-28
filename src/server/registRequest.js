@@ -1,10 +1,10 @@
-const isUserExist = require('./isUserExist');
+const isDataExist = require('./isDataExist');
 const createHash = require('./createHash');
 const createUser = require('./createUser');
 
 const registRequest = async (serverInfo, ID, Pass, socketID) => {
   if (
-    await isUserExist(serverInfo, 'userData', {
+    await isDataExist(serverInfo, 'userData', {
       ID: ID,
     })
   ) {

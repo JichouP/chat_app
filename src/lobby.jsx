@@ -7,10 +7,13 @@ export default class Lobby extends React.Component {
     this.state = { lobby: [] };
   }
   componentDidMount() {
-    this.props.socket.on('EnterSuccess', value => {
-      this.setState({ room: value });
+    this.props.socket.on('EnterSuccess', roomID => {
+      this.setState({ room: roomID });
       this.props.onChangeScene(SCENE_ROOM);
     });
+    this.props.socket.on('EnterFailed', () => {
+      alert('入室できませんでした');
+    })
     this.props.socket.emit('RoomListReq');
     this.props.socket.on('RoomListRes', (rooms, unreads) => {
       if (rooms !== null) {
@@ -45,8 +48,8 @@ export default class Lobby extends React.Component {
     });
   }
 
-  onClick(value) {
-    this.props.socket.emit('EnterReq', value);
+  onClick(roomID) {
+    this.props.socket.emit('EnterReq', roomID);
   }
 
   render() {

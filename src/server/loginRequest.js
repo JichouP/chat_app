@@ -1,4 +1,4 @@
-const isUserExist = require('./isUserExist');
+const isDataExist = require('./isDataExist');
 const createHash = require('./createHash');
 
 /**
@@ -10,7 +10,7 @@ const createHash = require('./createHash');
  */
 const loginRequest = async (serverInfo, ID, Pass, registSocketID) => {
   if (
-    await isUserExist(serverInfo, serverInfo.userCol, {
+    await isDataExist(serverInfo, serverInfo.userCol, {
       ID: ID,
       Pass: createHash(Pass),
     })

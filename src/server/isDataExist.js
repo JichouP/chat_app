@@ -5,7 +5,7 @@
  * @param {Object} obj
  * @returns {Boolean} isFound?
  */
-const isUserExist = (serverInfo, collection, obj) => {
+const isDataExist = (serverInfo, collection, obj) => {
   return new Promise((resolve, reject) => {
     serverInfo.client
       .db(serverInfo.db)

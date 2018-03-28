@@ -12,6 +12,8 @@ const serverInfo = require('./serverInfo');
 const roomListRequest = require('./roomListRequest');
 const loginRequest = require('./loginRequest');
 const registRequest = require('./registRequest');
+const createRoomRequest = require('./createRoomRequest');
+const enterRoomRequest = require('./enterRoomRequest');
 
 //log
 // express.use(morgan('combined'));
@@ -50,12 +52,14 @@ const initSocketConnection = (socket, serverInfo) => {
   });
   socket.on('RegistRequest', (ID, Pass) => {
     registRequest(serverInfo, ID, Pass, socket.id);
-  })
+  });
   socket.on('RoomListReq', () => {
     roomListRequest(serverInfo, socket.id);
   });
   socket.on('EnterReq', roomID => {
-    socket.join(roomID);
-    io.to(roomID).emit('EnterSuccess', roomID)
-  })
+    enterRoomRequest(serverInfo, roomID, socket);
+  });
+  socket.on('CreateRoomReq', name => {
+    createRoomRequest(serverInfo, name, socket.id);
+  });
 };
