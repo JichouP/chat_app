@@ -17,4 +17,4 @@ const addArrayElement = async (serverInfo, collection, query, array, element) =>
     );
 };
 
-module.exports = addData;
+module.exports = addArrayElement;

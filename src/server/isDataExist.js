@@ -21,4 +21,4 @@ const isDataExist = (serverInfo, collection, obj) => {
   });
 };
 
-module.exports = isUserExist;
+module.exports = isDataExist;
