@@ -20,6 +20,9 @@ const serverConfig = {
       }
     }]
   },
+  // optimization: {
+  //   minimize: true,
+  // },
   target: 'node',
   externals: [nodeExternals()]
 };
@@ -40,6 +43,9 @@ const clientConfig = {
   resolve: {
     extensions: ['.jsx', '.js'],
   },
+  // optimization: {
+  //   minimize: true,
+  // },
   devtool: 'source-map',
   target: 'web'
 };
