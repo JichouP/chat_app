@@ -13,10 +13,10 @@ export default class Lobby extends React.Component {
     });
     this.props.socket.on('EnterFailed', () => {
       alert('入室できませんでした');
-    })
+    });
     this.props.socket.emit('RoomListReq');
     this.props.socket.on('RoomListRes', (rooms, unreads) => {
-      if (rooms !== null) {
+      if (rooms.length !== 0) {
         this.setState({
           lobby: rooms.map((currentValue, index, array) => {
             return (
@@ -24,7 +24,7 @@ export default class Lobby extends React.Component {
                 <a
                   className="list-group-item"
                   onClick={() => {
-                    this.onClick(currentValue)
+                    this.onClick(currentValue);
                   }}
                 >
                   {currentValue}
