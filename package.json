@@ -2,7 +2,7 @@
   "name": "chat_app",
   "version": "1.0.0",
   "description": "socket.io test",
-  "main": "app.jsx",
+  "main": "src/app.jsx",
   "scripts": {
     "test": "jest",
     "build": "webpack",
