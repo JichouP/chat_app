@@ -37,7 +37,7 @@
     "express": "^4.16.2",
     "mongodb": "^3.0.4",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "react-dom": "^16.2.1",
     "recompose": "^0.26.0",
     "sha.js": "^2.4.10",
     "socket.io": "^2.0.4",
