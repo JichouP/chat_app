@@ -40,7 +40,7 @@
     "react-dom": "^16.2.1",
     "recompose": "^0.26.0",
     "sha.js": "^2.4.10",
-    "socket.io": "^2.0.4",
-    "socket.io-client": "^2.0.4"
+    "socket.io": "^2.5.0",
+    "socket.io-client": "^2.5.0"
   }
 }
